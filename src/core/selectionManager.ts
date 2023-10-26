@@ -3,7 +3,7 @@ import type { EntityStore } from '../core/store';
 import type { OffsetData, DraggableSettings } from '../core/drag';
 import { Draggable } from '../core/drag';
 import { writable } from 'svelte/store';
-import { SvelteTask } from '../core/task';
+import type { SvelteTask } from '../core/task';
 
 export interface SelectedItem {
     HTMLElement: HTMLElement;
@@ -20,7 +20,7 @@ export class SelectionManager {
     currentSelection = new Map<string, SelectedItem>();
     selectedTasks = writable({});
 
-    constructor(private taskStore: EntityStore<SvelteTask>) {}
+    constructor(private taskStore: EntityStore<SvelteTask>) { }
 
     selectSingle(taskId, node) {
         if (!this.currentSelection.has(taskId)) {

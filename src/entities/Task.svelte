@@ -1,6 +1,7 @@
 <script lang="ts">
     import { getContext } from 'svelte';
-    import { TaskModel, reflectTask } from '../core/task';
+    import type { TaskModel } from '../core/task';
+    import { reflectTask } from '../core/task';
     import { normalizeClassAttr, setCursor, throttle } from '../utils/dom';
     import type { GanttContext, GanttContextOptions, GanttContextServices } from '../gantt';
     import type { GanttDataStore } from '../core/store';
@@ -266,7 +267,10 @@
 
     let resizeEnabled: boolean;
     $: {
-        resizeEnabled = model.type !== 'milestone' && $rowStore.entities[model.resourceId].model.enableDragging && model.enableDragging;
+        resizeEnabled =
+            model.type !== 'milestone' &&
+            $rowStore.entities[model.resourceId].model.enableDragging &&
+            model.enableDragging;
     }
 </script>
 
@@ -285,7 +289,7 @@
     class:sg-task--sticky={model.stickyLabel}
 >
     {#if model.type === 'milestone'}
-        <div class="sg-milestone__diamond"></div>
+        <div class="sg-milestone__diamond" />
     {/if}
     {#if model.amountDone}
         <div class="sg-task-background" style="width:{model.amountDone}%" />
@@ -301,7 +305,12 @@
         <!-- <span class="debug">x:{_position.x} y:{_position.y}, x:{left} y:{top}</span> -->
         {#if model.showButton}
             <!-- svelte-ignore a11y-click-events-have-key-events -->
-            <span class="sg-task-button {model.buttonClasses}" on:click={onClick} role="button" tabindex="0">
+            <span
+                class="sg-task-button {model.buttonClasses}"
+                on:click={onClick}
+                role="button"
+                tabindex="0"
+            >
                 {@html model.buttonHtml}
             </span>
         {/if}
@@ -334,10 +343,8 @@
 
         white-space: nowrap;
         /* overflow: hidden; */
-        
-        transition:
-            background-color 0.2s,
-            opacity 0.2s;
+
+        transition: background-color 0.2s, opacity 0.2s;
         pointer-events: all;
     }
 
@@ -361,20 +368,12 @@
     }
 
     .sg-task:not(.moving) {
-        transition:
-            left 0.2s, top 0.2s,
-            transform 0.2s,
-            background-color 0.2s,
-            width 0.2s, 
+        transition: left 0.2s, top 0.2s, transform 0.2s, background-color 0.2s, width 0.2s,
             height 0.2s;
     }
 
     .sg-task--sticky:not(.moving) {
-        transition:
-            left 0.2s, top 0.2s,
-            transform 0.2s,
-            background-color 0.2s,
-            width 0.2s, 
+        transition: left 0.2s, top 0.2s, transform 0.2s, background-color 0.2s, width 0.2s,
             height 0.2s;
     }
 

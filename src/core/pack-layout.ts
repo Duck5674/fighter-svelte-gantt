@@ -1,4 +1,4 @@
-import { SvelteTask } from './task';
+import type { SvelteTask } from './task';
 
 /**
  * Layouts tasks in a 'pack' layout:
@@ -24,20 +24,20 @@ export function layout(tasks: SvelteTask[], params: { rowContentHeight: number }
 
     tasks.sort(_byStartThenByLongestSortFn);
 
-    for(const left of tasks) {
+    for (const left of tasks) {
         left.yPos = 0; // reset y positions
         left.intersectsWith = [];
-        for(const right of tasks) {
-            if(left !== right && _intersects(left, right)) {
+        for (const right of tasks) {
+            if (left !== right && _intersects(left, right)) {
                 left.intersectsWith.push(right);
             }
         }
     }
 
-    for(const task of tasks) {
+    for (const task of tasks) {
         task.numYSlots = _getMaxIntersectsWithLength(task);
         for (let i = 0; i < task.numYSlots!; i++) {
-            if(!task.intersectsWith!.some(intersect => intersect.yPos === i)) {
+            if (!task.intersectsWith!.some(intersect => intersect.yPos === i)) {
                 task.yPos = i;
                 task.height = (params.rowContentHeight / task.numYSlots!);
                 task.topDelta = (task.yPos * task.height); // + rowPadding which is added by taskfactory;
@@ -72,7 +72,7 @@ function _getMaxIntersectsWithLength(task: SvelteTask, seen = new Map<SvelteTask
     let len = task.intersectsWith!.length + 1;
     for (const intersect of task.intersectsWith!.filter(i => !seen.has(i))) {
         const innerLen = _getMaxIntersectsWithLength(intersect, seen);
-        if(innerLen > len) {
+        if (innerLen > len) {
             len = innerLen;
         }
     }

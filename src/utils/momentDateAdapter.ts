@@ -1,4 +1,4 @@
-import { SvelteGanttDateAdapter } from './date';
+import type { SvelteGanttDateAdapter } from './date';
 
 /**
  * Date adapter that uses MomentJS

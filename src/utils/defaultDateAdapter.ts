@@ -1,4 +1,4 @@
-import { SvelteGanttDateAdapter } from './date';
+import type { SvelteGanttDateAdapter } from './date';
 
 export class DefaultSvelteGanttDateAdapter implements SvelteGanttDateAdapter {
     format(date: number, format: string): string {
@@ -17,13 +17,11 @@ export class DefaultSvelteGanttDateAdapter implements SvelteGanttDateAdapter {
             case 'dd/MM/yyyy':
                 return `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
             case 'dd/MM/yyyy hh:mm':
-                return `${d.getDate()}/${
-                    d.getMonth() + 1
-                }/${d.getFullYear()} ${d.getHours()}:${d.getMinutes()}`;
+                return `${d.getDate()}/${d.getMonth() + 1
+                    }/${d.getFullYear()} ${d.getHours()}:${d.getMinutes()}`;
             case 'dd/MM/yyyy hh:mm:ss':
-                return `${d.getDate()}/${
-                    d.getMonth() + 1
-                }/${d.getFullYear()} ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`;
+                return `${d.getDate()}/${d.getMonth() + 1
+                    }/${d.getFullYear()} ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`;
             // VPY More formats supported 10/12/2021
             case 'YYYY':
                 return `${d.getFullYear()}`;

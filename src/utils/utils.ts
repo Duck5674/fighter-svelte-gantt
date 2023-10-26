@@ -1,4 +1,4 @@
-import { SvelteGanttDateAdapter } from './date';
+import type { SvelteGanttDateAdapter } from './date';
 
 export class GanttUtils {
     from: number;
