@@ -657,7 +657,7 @@
 
     let filteredRows = [];
     $: filteredRows = $allRows.filter(row => !row.hidden);
-    
+
     let rightScrollbarVisible: boolean;
     $: rightScrollbarVisible = rowContainerHeight > $visibleHeight;
 
@@ -715,7 +715,7 @@
                 const taskIds = $rowTaskCache[rowId];
                 if (taskIds) {
                     const tasks = taskIds.map(taskId => $taskStore.entities[taskId]);
-                    packLayout.layout(tasks, { 
+                    packLayout.layout(tasks, {
                         rowContentHeight: rowHeight - rowPadding * 2
                     });
                 }
@@ -726,6 +726,7 @@
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-mouse-events-have-key-events -->
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
     class="sg-gantt {classes}"
     class:sg-disable-transition={disableTransition}
@@ -752,7 +753,12 @@
     {/each}
 
     <div class="sg-timeline sg-view">
-        <div class="sg-header" bind:this={mainHeaderContainer} bind:clientHeight={$headerHeight} class:right-scrollbar-visible="{rightScrollbarVisible}">
+        <div
+            class="sg-header"
+            bind:this={mainHeaderContainer}
+            bind:clientHeight={$headerHeight}
+            class:right-scrollbar-visible={rightScrollbarVisible}
+        >
             <div class="sg-header-scroller" use:horizontalScrollListener>
                 <div class="header-container" style="width:{$_width}px">
                     <ColumnHeader
@@ -837,10 +843,10 @@
     }
 
     /* This class should take into account varying widths of the scroll bar */
-    :global(.right-scrollbar-visible) { 
+    :global(.right-scrollbar-visible) {
         /* set this value to your scrollbar width */
         padding-right: 17px;
-    } 
+    }
 
     .sg-timeline {
         flex: 1 1 0%;

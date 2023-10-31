@@ -114,16 +114,16 @@ export class Draggable {
 
         if (!this.settings.modelId) {
             event.stopPropagation();
-            event.preventDefault();
+            // event.preventDefault(); //Can't stop passive event mousedown
         }
 
         const canDrag = this.dragAllowed;
         const canResize = this.resizeAllowed;
 
         if (canDrag || canResize) {
-            const x = this.settings.getX();
-            const y = this.settings.getY();
-            const width = this.settings.getWidth();
+            const x = this.settings.getX(event);
+            const y = this.settings.getY(event);
+            const width = this.settings.getWidth(event);
 
             this.initialX = offsetEvent.clientX;
             this.initialY = offsetEvent.clientY;
@@ -189,8 +189,8 @@ export class Draggable {
 
         if (this.resizing) {
             const mousePos = getRelativePos(this.settings.container, offsetEvent);
-            const x = this.settings.getX();
-            const width = this.settings.getWidth();
+            const x = this.settings.getX(event);
+            const width = this.settings.getWidth(event);
 
             let resultX: number;
             let resultWidth: number;
@@ -252,7 +252,6 @@ export class Draggable {
         // mouseup
         if (this.dragging && this.settings.onDrag) {
             const mousePos = getRelativePos(this.settings.container, offsetEvent);
-
             this.settings.onDrag({
                 x: mousePos.x - this.mouseStartPosX,
                 y: mousePos.y - this.mouseStartPosY,
@@ -267,9 +266,9 @@ export class Draggable {
             clientY: this.offsetPos.y + event.clientY
         };
 
-        const x = this.settings.getX();
-        const y = this.settings.getY();
-        const width = this.settings.getWidth();
+        const x = this.settings.getX(event);
+        const y = this.settings.getY(event);
+        const width = this.settings.getWidth(event);
 
         this.settings.onMouseUp && this.settings.onMouseUp();
 

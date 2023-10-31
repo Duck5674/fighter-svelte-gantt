@@ -4,6 +4,7 @@
     import TableTreeCell from './TableTreeCell.svelte';
     import type { TableHeader } from './tableHeader';
     import type { SvelteRow } from '../../core/row';
+    import FighterCell from './FighterCell.svelte';
 
     export let headers: TableHeader[] = null;
     export let row: SvelteRow = null;
@@ -37,7 +38,7 @@
                 <TableTreeCell on:rowCollapsed on:rowExpanded {row}>
                     {#if row.model.iconClass}
                         <div class="sg-table-icon">
-                            <i class={row.model.iconClass}></i>
+                            <i class={row.model.iconClass} />
                         </div>
                     {/if}
 
@@ -49,10 +50,18 @@
                         {row.model[header.property]}
                     {/if}
                 </TableTreeCell>
+            {:else if (header.type = 'fighter')}
+                <FighterCell on:rowCollapsed on:rowExpand {row}>
+                    {#if row.model.iconClass}
+                        <div class="sg-table-icon">
+                            <i class={row.model.iconClass} />
+                        </div>
+                    {/if}
+                </FighterCell>
             {:else}
                 {#if row.model.iconClass}
                     <div class="sg-table-icon">
-                        <i class={row.model.iconClass}></i>
+                        <i class={row.model.iconClass} />
                     </div>
                 {/if}
 
@@ -91,7 +100,7 @@
 
     .sg-table-body-cell {
         border-bottom: #efefef 1px solid;
-        background-color: #fff;
+        /* background-color: #fff; */
         font-weight: bold;
     }
 
