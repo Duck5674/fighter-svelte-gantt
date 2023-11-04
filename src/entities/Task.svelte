@@ -344,7 +344,9 @@
         white-space: nowrap;
         /* overflow: hidden; */
 
-        transition: background-color 0.2s, opacity 0.2s;
+        transition:
+            background-color 0.2s,
+            opacity 0.2s;
         pointer-events: all;
     }
 
@@ -368,12 +370,22 @@
     }
 
     .sg-task:not(.moving) {
-        transition: left 0.2s, top 0.2s, transform 0.2s, background-color 0.2s, width 0.2s,
+        transition:
+            left 0.2s,
+            top 0.2s,
+            transform 0.2s,
+            background-color 0.2s,
+            width 0.2s,
             height 0.2s;
     }
 
     .sg-task--sticky:not(.moving) {
-        transition: left 0.2s, top 0.2s, transform 0.2s, background-color 0.2s, width 0.2s,
+        transition:
+            left 0.2s,
+            top 0.2s,
+            transform 0.2s,
+            background-color 0.2s,
+            width 0.2s,
             height 0.2s;
     }
 
@@ -428,11 +440,14 @@
 
     :global(.sg-task) {
         color: white;
-        background: rgb(116, 191, 255);
+        transition: filter 0.2s;
+        /* background: rgb(116, 191, 255); */
     }
 
     :global(.sg-task:hover) {
-        background: rgb(98, 161, 216);
+        /* background: rgb(98, 161, 216); */
+        /* background-image: linear-gradient(rgb(0 0 0/20%) 0 0); */
+        filter: brightness(0.85);
     }
 
     :global(.sg-task.selected) {

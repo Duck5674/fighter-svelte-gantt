@@ -5,6 +5,8 @@
     import type { TableHeader } from './tableHeader';
     import type { SvelteRow } from '../../core/row';
     import FighterCell from './FighterCell.svelte';
+    import InputCell from './InputCell.svelte';
+    import ColorSelect from './ColorSelect.svelte';
 
     export let headers: TableHeader[] = null;
     export let row: SvelteRow = null;
@@ -41,14 +43,14 @@
                             <i class={row.model.iconClass} />
                         </div>
                     {/if}
-
-                    {#if row.model.headerHtml}
+                    <InputCell {row}></InputCell>
+                    <!-- {#if row.model.headerHtml}
                         {@html row.model.headerHtml}
                     {:else if header.renderer}
                         {@html header.renderer(row)}
                     {:else}
                         {row.model[header.property]}
-                    {/if}
+                    {/if} -->
                 </TableTreeCell>
             {:else if (header.type = 'fighter')}
                 <FighterCell on:rowCollapsed on:rowExpand {row}>
@@ -58,6 +60,7 @@
                         </div>
                     {/if}
                 </FighterCell>
+                <ColorSelect {row}></ColorSelect>
             {:else}
                 {#if row.model.iconClass}
                     <div class="sg-table-icon">

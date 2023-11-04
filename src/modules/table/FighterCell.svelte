@@ -4,6 +4,7 @@
     import { createEventDispatcher } from 'svelte';
     import moment from 'moment';
     import DragElement from '../../core/drag/DragElement.svelte';
+    import ColorSelect from './ColorSelect.svelte';
 
     let dragLabel = 'Draggable';
 
@@ -52,6 +53,10 @@
             dragLabel = '-';
         }
     }
+
+    $: {
+        row.model.color;
+    }
 </script>
 
 <div class="sg-cell-inner" style="padding-left: {row.childLevel * 3}em">
@@ -70,6 +75,7 @@
         <div>{dragLabel}</div>
     </DragElement>
     <slot />
+    <ColorSelect {row}></ColorSelect>
 </div>
 
 <style>
@@ -83,7 +89,8 @@
 
     .sg-cell-inner {
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         justify-content: center;
+        flex-direction: column;
     }
 </style>

@@ -13,6 +13,10 @@
     let isDragging = false;
 
     export let row;
+    let backgroundColor = row.model.color?.name ? row.model.color.name : 'Blue';
+    $: {
+        backgroundColor = row.model.color.name;
+    }
 
     function overDropArea(event) {
         if (!mainContainer) {
@@ -109,10 +113,11 @@
 
             gantt.updateTask({
                 id: uuidv4(),
-                label: `Task Row ${row.model.callsign}`,
+                label: row.model.puckLabel ? row.model.puckLabel : row.model.callsign,
                 from: date,
                 to: date + 1 * 60 * 60 * 1000,
-                resourceId: targetRow.model.id
+                resourceId: targetRow.model.id,
+                classes: row.model.color.name
             });
         }
         resetDrag();
@@ -135,24 +140,18 @@
     on:pointermove={onMouseMove}
     on:pointerup={onMouseUp}
     on:pointerdown={mouseDown}
-    class="sg-external-indicator"
+    class="sg-external-indicator {backgroundColor}"
 >
     <slot />
 </div>
 
 <style>
-    .player-drag {
-        font-weight: 200;
-        cursor: grab;
-    }
-
     .sg-external-indicator {
-        border: 1px solid green;
-        background-color: green;
         width: 5em;
         cursor: grab;
         padding: 0.1em;
         text-align: center;
         user-select: none;
+        border: 1px solid black;
     }
 </style>

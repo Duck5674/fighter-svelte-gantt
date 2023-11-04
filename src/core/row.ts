@@ -5,6 +5,9 @@ export interface RowModel {
     contentHtml?: string;
     enableDragging?: boolean;
     height: number;
+    color: object;
+    callsign?: string;
+    puckLabel?: string;
     /** Child rows in expandable tree */
     children?: RowModel[];
     /** Content of row header, html string */
@@ -34,7 +37,7 @@ export interface SvelteRow {
 export class RowFactory {
     rowHeight: number;
 
-    constructor() {}
+    constructor() { }
 
     createRow(row: RowModel, y: number): SvelteRow {
         // defaults
@@ -48,6 +51,8 @@ export class RowFactory {
         row.enableDragging = row.enableDragging === undefined ? true : row.enableDragging;
         // height of row element
         const height = row.height || this.rowHeight;
+        row.color = { name: 'Blue', hex: '' };
+        row.callsign = '';
 
         return {
             model: row,
