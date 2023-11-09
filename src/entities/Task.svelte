@@ -24,7 +24,16 @@
         width: width
     };
 
-    $: updatePosition(left, top + topDelta, width);
+    let currentRowYValue;
+    $: {
+        currentRowYValue = $rowStore.entities[model.resourceId].y;
+        top = $rowPadding + currentRowYValue;
+    }
+
+    $: {
+        updatePosition(left, top + topDelta, width);
+    }
+
     function updatePosition(x, y, width) {
         if (!_dragging && !_resizing) {
             _position.x = x;

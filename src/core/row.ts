@@ -5,9 +5,14 @@ export interface RowModel {
     contentHtml?: string;
     enableDragging?: boolean;
     height: number;
+    /* Monster Added Variables */
     color: object;
     callsign?: string;
     puckLabel?: string;
+    displayOrder?: number;
+
+    /**End Monster Added variables */
+
     /** Child rows in expandable tree */
     children?: RowModel[];
     /** Content of row header, html string */
@@ -53,6 +58,7 @@ export class RowFactory {
         const height = row.height || this.rowHeight;
         row.color = { name: 'Blue', hex: '' };
         row.callsign = '';
+        row.displayOrder = row.displayOrder || (row.displayOrder === 0 ? 0 : 1001)  //place it at the end if it doesn't have an order number
 
         return {
             model: row,

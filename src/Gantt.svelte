@@ -655,8 +655,28 @@
         return null;
     }
 
+    function setRowOrder(allRows) {
+        //Orders the rows by their order number then updates their position on the screen
+        let y = 0;
+        allRows.sort((a, b) => {
+            return a.model.orderNumber - b.model.orderNumber;
+        });
+        for (let i = 0; i < allRows.length; i++) {
+            let row = allRows[i];
+            let rowModel = row.model;
+            rowModel.orderNumber = i;
+            rowModel.y = row.y;
+            row.y = y;
+            y += row.height;
+        }
+        return allRows;
+    }
+
     let filteredRows = [];
-    $: filteredRows = $allRows.filter(row => !row.hidden);
+    $: {
+        setRowOrder($allRows);
+        filteredRows = $allRows.filter(row => !row.hidden);
+    }
 
     let rightScrollbarVisible: boolean;
     $: rightScrollbarVisible = rowContainerHeight > $visibleHeight;
@@ -680,7 +700,9 @@
     $: paddingBottom = (filteredRows.length - endIndex - 1) * rowHeight;
 
     let visibleRows = [];
-    $: visibleRows = filteredRows.slice(startIndex, endIndex + 1);
+    $: {
+        visibleRows = filteredRows.slice(startIndex, endIndex + 1);
+    }
 
     let visibleTasks: SvelteTask[];
     $: {

@@ -15,7 +15,7 @@
 <div class="color-container">
     <select class={colors[selectedColor].name} bind:value={selectedColor} on:change={updateRow}>
         {#each colors as color, colorIndex}
-            <option class={color.name} value={colorIndex}>{color.name}</option>
+            <option class={color.name} value={colorIndex}>{color.displayName}</option>
         {/each}
     </select>
 </div>

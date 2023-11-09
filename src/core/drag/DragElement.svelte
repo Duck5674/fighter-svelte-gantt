@@ -115,7 +115,7 @@
                 id: uuidv4(),
                 label: row.model.puckLabel ? row.model.puckLabel : row.model.callsign,
                 from: date,
-                to: date + 1 * 60 * 60 * 1000,
+                to: date + 30 * 60 * 1000,
                 resourceId: targetRow.model.id,
                 classes: row.model.color.name
             });

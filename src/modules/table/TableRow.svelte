@@ -36,9 +36,12 @@
             id: uuidv4(),
             callsign: '',
             puck: 'Builder',
-            type: 'fighter'
+            type: 'fighter',
+            displayOrder: row.model.displayOrder
         };
-        const newRow = rowFactory.createRow(newRowModel, null);
+
+        const newRow = rowFactory.createRows([newRowModel])[0];
+
         rowStore.upsert(newRow);
     }
 </script>

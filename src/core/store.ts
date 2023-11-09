@@ -117,6 +117,8 @@ function createEntityStore<T extends EntityType, K extends EntityKey = EntityKey
             for (let i = 0; i < items.length; i++) {
                 ids.push(items[i].model.id);
                 entities[items[i].model.id] = items[i];
+                let displayOrder = items[i].model.displayOrder;
+                items[i].model.displayOrder = displayOrder > 1000 ? i : displayOrder;
             }
 
             set({ ids, entities });
