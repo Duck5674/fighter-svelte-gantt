@@ -659,12 +659,12 @@
         //Orders the rows by their order number then updates their position on the screen
         let y = 0;
         allRows.sort((a, b) => {
-            return a.model.orderNumber - b.model.orderNumber;
+            return a.model.displayOrder - b.model.displayOrder;
         });
         for (let i = 0; i < allRows.length; i++) {
             let row = allRows[i];
             let rowModel = row.model;
-            rowModel.orderNumber = i;
+            rowModel.displayOrder = i;
             rowModel.y = row.y;
             row.y = y;
             y += row.height;

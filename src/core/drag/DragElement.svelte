@@ -113,7 +113,7 @@
 
             gantt.updateTask({
                 id: uuidv4(),
-                label: row.model.puckLabel ? row.model.puckLabel : row.model.callsign,
+                label: row.model.puckLabel ? row.model.puckLabel : ' ',
                 from: date,
                 to: date + 30 * 60 * 1000,
                 resourceId: targetRow.model.id,
