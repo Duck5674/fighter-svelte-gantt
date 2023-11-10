@@ -14,11 +14,16 @@
     export let headers: TableHeader[] = null;
     export let row: SvelteRow = null;
 
-    const { rowHeight } = getContext('options');
+    // const { rowHeight } = getContext('options');
     const { hoveredRow, selectedRow } = getContext('gantt');
     const { rowStore } = getContext('dataStore') as GanttDataStore;
     const rowFactory = new RowFactory();
-    rowFactory.rowHeight = $rowHeight;
+    $: {
+        rowFactory.rowHeight = row.height;
+    } //$rowHeight;
+    let initialMouseY;
+    let initialRowHeight;
+    let minRowHeight = 25;
 
     const dispatch = createEventDispatcher();
 
@@ -31,7 +36,8 @@
         if (row.model.expanded == false) dispatch('rowCollapsed', { row });
     });
 
-    function addRow() {
+    function addRow(e) {
+        e.stopPropagation();
         let newRowModel = {
             id: uuidv4(),
             callsign: '',
@@ -44,11 +50,30 @@
 
         rowStore.upsert(newRow);
     }
+
+    function startResize(e) {
+        initialMouseY = e.clientY;
+        initialRowHeight = row.height;
+        document.addEventListener('mousemove', handleResize);
+        document.addEventListener('mouseup', stopResize);
+    }
+
+    function handleResize(e) {
+        let newRowHeight = initialRowHeight + e.clientY - initialMouseY;
+        $rowStore.entities[row.model.id].height =
+            newRowHeight >= minRowHeight ? newRowHeight : minRowHeight;
+    }
+
+    function stopResize(e) {
+        document.removeEventListener('mousemove', handleResize);
+        document.removeEventListener('mouseup', stopResize);
+        initialMouseY = undefined;
+    }
 </script>
 
 <div
     data-row-id={row.model.id}
-    style="height:{$rowHeight}px"
+    style="height:{row.height}px"
     class="sg-table-row {row.model.classes || ''}"
     class:sg-row-expanded={row.expanded}
     class:sg-hover={$hoveredRow == row.model.id}
@@ -103,7 +128,12 @@
             {/if}
         </div>
     {/each}
-    <div class="sg-add-row-container">
+    <!-- svelte-ignore a11y-no-static-element-interactions -->
+    <div
+        class="sg-add-row-container"
+        on:pointerdown={startResize}
+        style={`top: ${row.height - 6}px`}
+    >
         <div class="add-row-line">
             <!-- svelte-ignore a11y-click-events-have-key-events -->
             <!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -126,13 +156,12 @@
 <style>
     .sg-add-row-container {
         position: absolute;
-        top: 47px; /*Row height - 1/2 height*/
         height: 12px;
         width: 150px; /*Same as callsign width*/
-        /* background-color: blue; */
         transition: opacity 0.5s ease;
         z-index: 2;
         opacity: 0;
+        user-select: none;
     }
 
     .add-row-line {
@@ -148,6 +177,7 @@
 
     .sg-add-row-container:hover {
         opacity: 1;
+        cursor: n-resize;
     }
 
     .bi-plus-circle {
@@ -158,6 +188,7 @@
         border-radius: 20px;
         height: 20px;
         width: 20px;
+        cursor: pointer;
     }
 
     .sg-add-row-container:hover .bi-plus-circle {

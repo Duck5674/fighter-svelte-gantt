@@ -40,7 +40,7 @@ export function layout(tasks: SvelteTask[], params: { rowContentHeight: number }
             if (!task.intersectsWith!.some(intersect => intersect.yPos === i)) {
                 task.yPos = i;
                 task.height = (params.rowContentHeight / task.numYSlots!);
-                task.topDelta = (task.yPos * task.height); // + rowPadding which is added by taskfactory;
+                task.topDelta = (task.yPos * (task.height + 2)); // + rowPadding which is added by taskfactory;
                 break;
             }
         }

@@ -665,9 +665,11 @@
             let row = allRows[i];
             let rowModel = row.model;
             rowModel.displayOrder = i;
-            rowModel.y = row.y;
-            row.y = y;
-            y += row.height;
+            if (!row.hidden) {
+                rowModel.y = row.y;
+                row.y = y;
+                y += row.height;
+            }
         }
         return allRows;
     }
@@ -682,7 +684,11 @@
     $: rightScrollbarVisible = rowContainerHeight > $visibleHeight;
 
     let rowContainerHeight;
-    $: rowContainerHeight = filteredRows.length * rowHeight;
+    $: {
+        rowContainerHeight = filteredRows.reduce((accumulator, row) => {
+            return accumulator + row.height;
+        }, 0);
+    }
 
     let startIndex;
     $: startIndex = Math.floor(__scrollTop / rowHeight);
@@ -738,7 +744,7 @@
                 if (taskIds) {
                     const tasks = taskIds.map(taskId => $taskStore.entities[taskId]);
                     packLayout.layout(tasks, {
-                        rowContentHeight: rowHeight - rowPadding * 2
+                        rowContentHeight: $rowStore.entities[rowId].height - rowPadding * 2
                     });
                 }
             }
