@@ -30,6 +30,7 @@
     import { DefaultSvelteGanttDateAdapter } from './utils/defaultDateAdapter';
     import type { SvelteGanttDateAdapter } from './utils/date';
     import * as packLayout from './core/pack-layout';
+    import { timeStore } from '../../lib/timeStore';
 
     function assertSet(values) {
         for (const name in values) {
@@ -64,8 +65,8 @@
     assertSet({ from, to });
     const _from = writable(toDateNum(from));
     const _to = writable(toDateNum(to));
-    $: $_from = toDateNum(from);
-    $: $_to = toDateNum(to);
+    $: $_from = $timeStore.startTime; //toDateNum(from);
+    $: $_to = $timeStore.endTime; //toDateNum(to);
 
     export let minWidth = 800;
     export let fitWidth = false;
@@ -241,6 +242,7 @@
             offset,
             highlightedDurations
         );
+        console.log(periods);
         let left = 0;
         let distance_point = 0;
         periods.forEach(function (period) {
@@ -307,6 +309,8 @@
         api.registerEvent('tasks', 'dblclicked');
         api.registerEvent('timeranges', 'clicked');
         api.registerEvent('timeranges', 'resized');
+
+        window.addEventListener('keyup', zoom);
 
         mounted = true;
     });
@@ -389,6 +393,63 @@
 
     function onResize(event) {
         tableWidth = event.detail.left;
+    }
+
+    function grow(growthFactor = 1) {
+        let oldFrom = $_from;
+        let oldTo = $_to;
+        let oldSpan = oldTo - oldFrom;
+        let valToAdd = Math.round((oldSpan * (growthFactor - 1)) / 2);
+        let newFrom = oldFrom - valToAdd;
+        let newTo = oldTo + valToAdd;
+        console.log(valToAdd, growthFactor);
+        $_from = newFrom;
+        $_to = newTo;
+    }
+
+    async function zoom(event) {
+        const prevZoomLevel = zoomLevel;
+        if (event.key === 'ArrowDown') {
+            zoomLevel = Math.max(zoomLevel - 1, 0);
+            if (zoomLevel != prevZoomLevel && zoomLevels[prevZoomLevel].grow) {
+                grow(1 / zoomLevels[prevZoomLevel].grow);
+            }
+        } else if (event.key === 'ArrowUp') {
+            zoomLevel = Math.min(zoomLevel + 1, zoomLevels.length - 1);
+            if (zoomLevel != prevZoomLevel && zoomLevels[zoomLevel].grow) {
+                grow(zoomLevels[zoomLevel].grow);
+            }
+        }
+
+        if (prevZoomLevel != zoomLevel && zoomLevels[zoomLevel]) {
+            const options = {
+                columnUnit: columnUnit,
+                columnOffset: columnOffset,
+                minWidth: $_minWidth,
+                ...zoomLevels[zoomLevel]
+            };
+
+            const scale = options.minWidth / $_width;
+            const node = mainContainer;
+            // const mousepos = getRelativePos(node, event);
+            const before = node.scrollLeft; //+ mousepos.x;
+            const after = before * scale;
+            const scrollLeft = after + node.clientWidth / 2;
+
+            columnUnit = options.columnUnit;
+            columnOffset = options.columnOffset;
+            $_minWidth = options.minWidth;
+
+            if (options.headers) headers = options.headers;
+
+            if (options.fitWidth) $_fitWidth = options.fitWidth;
+
+            api['gantt'].raise.viewChanged();
+            zooming = true;
+            await tick();
+            node.scrollLeft = scrollLeft;
+            zooming = false;
+        }
     }
 
     let zoomLevel = 0;
